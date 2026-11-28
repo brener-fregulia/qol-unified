@@ -73,6 +73,7 @@ open a real window and use disposable folders under
   [changelog](mods/qol/CHANGELOG.md)
 - Unified: Optimizations: [overview and catalog](docs/optimizations/README.md),
   [changelog](mods/optimizations/CHANGELOG.md)
+- [Pending manual QA](docs/qa/pending-manual-tests.md)
 - [Vanilla world compatibility](docs/architecture/vanilla-world-compatibility.md):
   removing any Unified mod never breaks a world
 - Discoveries: [Rust, native code and AOT](docs/discovery/rust-native-aot-feasibility.md),

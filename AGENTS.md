@@ -51,6 +51,7 @@ commit message or the document.
 | `docs/architecture/unified-settings-integration.md` | Shared settings across Unified mods (discovery, [Proposed]) |
 | `docs/architecture/vanilla-world-compatibility.md` | Vanilla world compatibility contract (principle [Approved], rules and tests [Proposed]) |
 | `docs/discovery/` | Project-wide discoveries: [Rust/native/AOT feasibility](docs/discovery/rust-native-aot-feasibility.md), [Unified: Graphics, Vulkan and Rust](docs/discovery/unified-graphics-rust-vulkan.md) ([Proposed]) |
+| `docs/qa/pending-manual-tests.md` | Pending manual QA backlog for every module |
 | `docs/development/versioning.md` | Per-module versioning, tags and changelog policy |
 | `docs/development/linux-setup.md` | Linux / WSL development setup |
 | `docs/development/cachyos-environment-audit.md` | CachyOS environment audit (2026-11-28) |
@@ -131,6 +132,9 @@ Full policy: [docs/development/versioning.md](docs/development/versioning.md).
 ## Task completion
 
 Stop at the boundary of the assigned task; do not start the next milestone.
+When a feature needs checks only a person can run, add them to the
+[manual QA backlog](docs/qa/pending-manual-tests.md) and follow its
+conventions; never mark a manual case passed without the PO's report.
 Finish with a report containing: starting and final commit hashes, files
 changed, decisions documented or implemented, open questions, validation
 results, and commit/push status.
