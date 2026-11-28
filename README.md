@@ -77,7 +77,8 @@ open a real window and use disposable folders under
 - [Vanilla world compatibility](docs/architecture/vanilla-world-compatibility.md):
   removing any Unified mod never breaks a world
 - Discoveries: [Rust, native code and AOT](docs/discovery/rust-native-aot-feasibility.md),
-  [Unified: Graphics, Vulkan and Rust](docs/discovery/unified-graphics-rust-vulkan.md)
+  [Unified: Graphics, Vulkan and Rust](docs/discovery/unified-graphics-rust-vulkan.md),
+  [search architecture](docs/discovery/unified-search-architecture.md)
 - Contributors and agents: [AGENTS.md](AGENTS.md)
 
 The project follows Spec-Driven Development: behavior is specified and
