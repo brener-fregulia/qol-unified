@@ -4,6 +4,7 @@ import unified.qol.core.Feature;
 import unified.qol.core.FeatureRegistry;
 import unified.qol.feature.chatheads.ChatHeadsFeature;
 import unified.qol.feature.foodhud.FoodHudFeature;
+import unified.qol.feature.inventorysearch.InventorySearchFeature;
 import unified.qol.feature.keyboardmap.KeyboardMapFeature;
 import unified.qol.feature.mousetweaks.MouseTweaksFeature;
 import unified.qol.feature.shulkerpreview.ShulkerPreviewFeature;
@@ -32,6 +33,7 @@ public final class Features {
         builder.register(new ShulkerPreviewFeature());
         builder.register(new ZoomFeature());
         builder.register(new MouseTweaksFeature());
+        builder.register(new InventorySearchFeature());
         developmentFeatures.forEach(builder::register);
         return builder.build();
     }

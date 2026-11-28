@@ -247,5 +247,12 @@
   "qol_unified.feature.mouse_tweaks.setting.wheel_search_order": "Wheel search order",
   "qol_unified.feature.mouse_tweaks.setting.wheel_search_order.last_to_first": "Last to first",
   "qol_unified.feature.mouse_tweaks.setting.wheel_search_order.first_to_last": "First to last",
+  "qol_unified.feature.inventory_search.name": "Inventory Search",
+  "qol_unified.feature.inventory_search.description": "Adds a small search field to the inventory, chests, barrels, Ender Chests, Shulker Boxes and hoppers. Matching items are framed and the others dimmed; nothing is moved. Searches item names, ids and enchantments. Ctrl+F focuses it.",
+  "qol_unified.feature.inventory_search.note": "Not shown in the creative inventory, which has its own search.",
+  "qol_unified.inventory_search.hint": "Search...",
+  "qol_unified.inventory_search.narration": "Search items",
+  "qol_unified.inventory_search.narration_count": "Search items: %s found",
+  "qol_unified.inventory_search.open": "Search items (Ctrl+F)",
   "qol_unified.target_info.shulker_last_seen": "Contents as last seen"
 }

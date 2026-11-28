@@ -51,6 +51,7 @@ public final class QolUnifiedClient implements ClientModInitializer {
         KeyboardMapHooks.registerKeyMapping();
         unified.qol.feature.zoom.ZoomHooks.register();
         unified.qol.feature.mousetweaks.MouseTweaksHooks.register();
+        unified.qol.feature.inventorysearch.InventorySearchHooks.register();
         // Settings comparisons (settings-ux-v1.md §8): small drawers, shown in the settings even while a feature is
         // off; their rendering classes load only when the settings panel draws them.
         unified.qol.feature.foodhud.FoodHudComparison.register();

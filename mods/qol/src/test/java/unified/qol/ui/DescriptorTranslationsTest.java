@@ -47,7 +47,7 @@ class DescriptorTranslationsTest {
         Set<String> en = keys("en_us");
         Set<String> pt = keys("pt_br");
         var features = Features.createRegistry().features();
-        assertEquals(8, features.size());
+        assertEquals(9, features.size());
         for (Feature feature : features) {
             FeatureDescriptor d = feature.descriptor();
             assertTrue(DescriptorTranslations.missing(d, en).isEmpty(), d.id() + " en_us");

@@ -247,5 +247,12 @@
   "qol_unified.feature.mouse_tweaks.setting.wheel_search_order": "Ordem de busca da rodinha",
   "qol_unified.feature.mouse_tweaks.setting.wheel_search_order.last_to_first": "Do último ao primeiro",
   "qol_unified.feature.mouse_tweaks.setting.wheel_search_order.first_to_last": "Do primeiro ao último",
+  "qol_unified.feature.inventory_search.name": "Busca no Inventário",
+  "qol_unified.feature.inventory_search.description": "Adiciona um pequeno campo de busca ao inventário, baús, barris, baús do End, shulker boxes e funis. Os itens encontrados ganham uma moldura e os demais ficam escurecidos; nada é movido. Busca nomes, ids e encantamentos dos itens. Ctrl+F foca o campo.",
+  "qol_unified.feature.inventory_search.note": "Não aparece no inventário criativo, que tem sua própria busca.",
+  "qol_unified.inventory_search.hint": "Buscar...",
+  "qol_unified.inventory_search.narration": "Buscar itens",
+  "qol_unified.inventory_search.narration_count": "Buscar itens: %s encontrados",
+  "qol_unified.inventory_search.open": "Buscar itens (Ctrl+F)",
   "qol_unified.target_info.shulker_last_seen": "Conteúdo visto por último"
 }

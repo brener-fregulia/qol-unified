@@ -8,6 +8,7 @@
     "ChatComponentAccessor",
     "ClientLevelBlockChangeMixin",
     "ChatListenerMixin",
+    "ContainerScreenSearchMixin",
     "ContainerScreenSlotsAccessor",
     "HudFoodMixin",
     "HudHeartsMixin",
