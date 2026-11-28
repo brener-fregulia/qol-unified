@@ -204,7 +204,7 @@ requests.
 | Refresh | Vanilla's own `REQUEST_STATS` sent by `StatsScreen.init()`, and `onStatsUpdated()` | Verified |
 | Layout | `MenuTabBar`, `HeaderAndFooterLayout`, `ObjectSelectionList`, `ItemDisplayWidget`, `EditBox` | Verified, public |
 | Text | Vanilla translation keys `stat.*`, `stat_type.*`, `gui.stats.*` | Verified |
-| Search | The shared `unified.qol.search` primitives ([architecture](../../discovery/unified-search-architecture.md) §6) | Proposed |
+| Search | The shared `unified.qol.search` core: `SearchQuery.matchesAll` over prepared `SearchableText` ([architecture](../../discovery/unified-search-architecture.md) §7) | Implemented 2026-11-28 |
 | Settings | QoL `FeatureDescriptor`, Configuration Service, Unified Settings workspace | Verified (existing) |
 
 ## 4. Proposed behavior

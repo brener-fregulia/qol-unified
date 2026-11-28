@@ -19,6 +19,11 @@ released yet.
 
 ### Fixed
 
+- Sound Control search ignores accents, so `musica` finds `Música`; any
+  whitespace now separates words. Keyboard Map search also treats repeated
+  spaces as one and no longer re-reads the action names for every key on
+  every frame. Both now use one shared search rule; their results are
+  otherwise unchanged.
 - Inventory Mouse Tweaks no longer blocks vanilla's Shift + double-click with an
   item on the cursor, which moves every matching stack between a container and
   the player inventory.

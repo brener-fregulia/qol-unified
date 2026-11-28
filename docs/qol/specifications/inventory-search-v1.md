@@ -103,7 +103,7 @@ Slots are drawn in a matrix translated by `leftPos` and `topPos`.
 | Screen hooks | Fabric `ScreenEvents.AFTER_INIT`, `Screens.getButtons`, `ScreenKeyboardEvents.allowKeyPress`, `ScreenEvents.afterTick` (already used by Mouse Tweaks) | Verified |
 | Slot under the mouse | `ContainerScreenSlotsAccessor` (Mouse Tweaks) | Verified (existing) |
 | Text field | Vanilla `EditBox` with the hint `gui.recipebook.search_hint` ("Search...") | Verified |
-| Matching | The shared `unified.qol.search` primitives | Proposed |
+| Matching | The shared `unified.qol.search` core: `SearchQuery.matchesAll` over prepared `SearchableText` ([architecture](../../discovery/unified-search-architecture.md) §7) | Implemented 2026-11-28 |
 | Container contents of item stacks | `ShulkerContents` (Shulker Preview): reads the stack's own `container` component, which is current, not a cache | Verified (existing); use is Q-IS4 |
 
 ## 4. Proposed behavior

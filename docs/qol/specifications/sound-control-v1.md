@@ -390,7 +390,9 @@ so playing sounds return to vanilla volume.
   `SoundManager.getAvailableSounds()`. That covers vanilla, mods using
   standard registration and `sounds.json`, and resource-pack events. It is
   rebuilt after a resource reload. There is no hardcoded list.
-- **Matches** (case-insensitive substring, all words must match):
+- **Matches** (case- and accent-insensitive substring, all words must match;
+  accents [Approved 2026-11-28, Q-SA2], through the shared
+  [search core](../../discovery/unified-search-architecture.md#7-implementation-search-core-v1)):
   - friendly name in the current language;
   - full id (`minecraft:entity.villager.ambient`);
   - namespace or mod display name;
@@ -845,7 +847,7 @@ Prism instance or world.
 | Lifecycle and change detection | `SoundControlFeature` |
 | Minecraft side: table, listener, entry points | `SoundControlHooks` |
 | Recent history | `RecentSounds` (generic, Minecraft-free) |
-| Search and filters | `SoundSearch` |
+| Search and filters | `SoundSearch` on the shared `unified.qol.search` core; prepared candidates cached per screen |
 | Screen | `SoundControlScreen` |
 | Shared mod names (Q-SC10) | `platform/ModNames`, also used by Target Info |
 | Core map setting (Q-SC3) | `SettingDescriptor.MapSetting`, `ConfigurationService` (§8.2) |

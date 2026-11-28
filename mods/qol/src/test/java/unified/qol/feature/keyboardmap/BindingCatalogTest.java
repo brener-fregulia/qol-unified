@@ -80,6 +80,35 @@ class BindingCatalogTest {
     }
 
     @Test
+    void sharedSearchCoreKeepsPhraseSemanticsAndOrder() {
+        BindingCatalog c = sample();
+        // Phrase in one field, as before the migration: words in another order or across fields do not match.
+        assertEquals(List.of("key.forward"), ids(c, new BindingFilter("walk forwards", null, Visibility.ALL)));
+        assertEquals(List.of(), ids(c, new BindingFilter("forwards walk", null, Visibility.ALL)));
+        assertEquals(List.of(), ids(c, new BindingFilter("walk movement", null, Visibility.ALL)));
+        // Whitespace is normalized on both sides; the key prefix ignores case.
+        assertEquals(List.of("key.forward"), ids(c, new BindingFilter("  walk   forwards ", null, Visibility.ALL)));
+        assertEquals(List.of("key.drop", "key.mod.zoom"), ids(c, new BindingFilter("KEY: Q", null, Visibility.ALL)));
+        assertEquals(List.of("key.mod.ação"), ids(c, new BindingFilter("acao rapida", null, Visibility.ALL)));
+        // Results keep the catalog's order.
+        assertEquals(List.of("key.mod.zoom", "key.mod.ação", "key.mod.back"),
+                ids(c, new BindingFilter("example", null, Visibility.ALL)));
+        // The prepared fields come from the snapshot: name, category, input label.
+        Binding drop = c.binding("key.drop").orElseThrow();
+        assertEquals("drop selected item", c.searchText(drop).field(0));
+        assertEquals("q", c.searchText(drop).field(2));
+    }
+
+    @Test
+    void filtersAreValuesOfTheirInputs() {
+        var a = new BindingFilter("Walk", "Movement", Visibility.ALL);
+        assertEquals(a, new BindingFilter("Walk", "Movement", null));
+        assertTrue(a.sameAs("Walk", "Movement", Visibility.ALL));
+        assertFalse(a.sameAs("walk", "Movement", Visibility.ALL), "a changed query makes a new filter");
+        assertEquals("", new BindingFilter(null, null, null).query());
+    }
+
+    @Test
     void filtersCombineWithAnd() {
         BindingCatalog c = sample();
         assertEquals(List.of("key.drop", "key.mod.zoom"), ids(c, new BindingFilter("", null, Visibility.OVERLAPS)));

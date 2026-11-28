@@ -31,6 +31,25 @@ class SoundSearchTest {
     }
 
     @Test
+    void accentInsensitiveSinceTheSharedSearchCore() {
+        var music = new SoundSearch.Candidate("minecraft:music.game", "Música", "minecraft", "Minecraft", "music",
+                "Música");
+        assertTrue(SoundSearch.matches(music, "musica", null, null), "musica finds Música");
+        assertTrue(SoundSearch.matches(VILLAGER, "aldeao resmunga", null, null));
+        assertTrue(SoundSearch.matches(VILLAGER, "amigaveis", null, null), "localized category without accents");
+        assertTrue(SoundSearch.matches(VILLAGER, "ALDEÃO\tresmunga", null, null), "any whitespace between words");
+        assertFalse(SoundSearch.matches(VILLAGER, "aldeao\nhurt", null, null));
+    }
+
+    @Test
+    void candidatesCarryTheirPreparedText() {
+        assertEquals("aldeao resmunga", VILLAGER.text().field(0));
+        assertEquals(VILLAGER, new SoundSearch.Candidate(VILLAGER.id(), VILLAGER.name(), VILLAGER.namespace(),
+                VILLAGER.modName(), VILLAGER.category(), VILLAGER.categoryLabel()));
+        assertEquals("", HUM.text().field(4), "never heard: empty category field");
+    }
+
+    @Test
     void filtersUseKnownInformationOnly() {
         assertTrue(SoundSearch.matches(VILLAGER, "", "neutral", "minecraft"));
         assertFalse(SoundSearch.matches(VILLAGER, "", "hostile", null));

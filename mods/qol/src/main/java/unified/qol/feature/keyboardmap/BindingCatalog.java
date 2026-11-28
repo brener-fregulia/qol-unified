@@ -1,29 +1,47 @@
 package unified.qol.feature.keyboardmap;
 
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import unified.qol.search.SearchableText;
 
 /** An immutable snapshot of all mappings, indexed by input (keymap-v1.md P-1). Built on open and after changes. */
 public final class BindingCatalog {
     private final List<Binding> bindings;
     private final Map<InputId, List<Binding>> byInput = new LinkedHashMap<>();
     private final List<String> categories;
+    /** Each binding's folded search fields (name, category, input label), prepared once per snapshot. */
+    private final Map<Binding, SearchableText> searchTexts = new IdentityHashMap<>();
 
     public BindingCatalog(List<Binding> bindings) {
         this.bindings = List.copyOf(bindings);
         var categories = new LinkedHashSet<String>();
         for (Binding binding : this.bindings) {
             categories.add(binding.category());
+            searchTexts.put(binding, prepare(binding));
             if (!binding.unbound()) {
                 byInput.computeIfAbsent(binding.input(), i -> new ArrayList<>()).add(binding);
             }
         }
         byInput.replaceAll((input, list) -> List.copyOf(list));
         this.categories = List.copyOf(categories);
+    }
+
+    /**
+     * The binding's prepared search fields: 0 name, 1 category, 2 input label. Bindings of this snapshot are prepared
+     * when it is built; any other binding is prepared on the spot.
+     */
+    public SearchableText searchText(Binding binding) {
+        SearchableText text = searchTexts.get(binding);
+        return text != null ? text : prepare(binding);
+    }
+
+    private static SearchableText prepare(Binding binding) {
+        return SearchableText.of(binding.name(), binding.category(), binding.inputLabel());
     }
 
     public List<Binding> bindings() {

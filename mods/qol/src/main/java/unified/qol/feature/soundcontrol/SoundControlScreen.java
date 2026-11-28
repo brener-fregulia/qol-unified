@@ -1,6 +1,7 @@
 package unified.qol.feature.soundcontrol;
 
 import unified.qol.platform.ModNames;
+import unified.qol.search.SearchQuery;
 import unified.qol.ui.DraftScreen;
 import unified.qol.ui.SettingsDraft;
 import unified.qol.ui.UiKeys;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -64,6 +66,9 @@ final class SoundControlScreen extends Screen implements DraftScreen {
     private final boolean standalone;
     private final Map<String, SoundRule> working;
     private final Map<String, Base> catalog = new HashMap<>();
+    /** Prepared search candidates by sound id; see {@link #candidate(Base)}. The language cannot change while open. */
+    private final Map<String, SoundSearch.Candidate> preparedCandidates = new HashMap<>();
+    private final Map<String, String> categoryLabels = new HashMap<>();
     private final Set<String> installed = new HashSet<>();
     private Map<String, RecentSounds.Entry<Identifier, SoundSource>> recentById = Map.of();
     private List<String> recentOrder = List.of();
@@ -250,11 +255,23 @@ final class SoundControlScreen extends Screen implements DraftScreen {
         }
     }
 
+    /**
+     * The sound's search candidate. Candidates and their folded text are kept for the screen's lifetime and remade only
+     * when the sound's last-heard category changes, so typing filters prepared text instead of refolding every sound.
+     */
     private SoundSearch.Candidate candidate(Base base) {
         var heard = recentById.get(base.id());
         String category = heard == null ? null : heard.category().getName();
-        String label = category == null ? null : Component.translatable("soundCategory." + category).getString();
-        return new SoundSearch.Candidate(base.id(), base.name(), base.namespace(), base.modName(), category, label);
+        SoundSearch.Candidate cached = preparedCandidates.get(base.id());
+        if (cached != null && Objects.equals(cached.category(), category)) {
+            return cached;
+        }
+        String label = category == null ? null
+                : categoryLabels.computeIfAbsent(category,
+                        c -> Component.translatable("soundCategory." + c).getString());
+        var made = new SoundSearch.Candidate(base.id(), base.name(), base.namespace(), base.modName(), category, label);
+        preparedCandidates.put(base.id(), made);
+        return made;
     }
 
     private void rebuildRows() {
@@ -262,12 +279,13 @@ final class SoundControlScreen extends Screen implements DraftScreen {
             return;
         }
         var candidates = new ArrayList<SoundSearch.Candidate>();
-        boolean filtering = !query.isBlank() || categoryFilter != null || namespaceFilter != null;
+        SearchQuery searchQuery = SearchQuery.of(query);
+        boolean filtering = !searchQuery.isEmpty() || categoryFilter != null || namespaceFilter != null;
         switch (tab) {
             case RECENT -> {
                 for (String id : recentOrder) {
                     var c = candidate(catalog.get(id));
-                    if (SoundSearch.matches(c, query, categoryFilter, namespaceFilter)) {
+                    if (SoundSearch.matches(c, searchQuery, categoryFilter, namespaceFilter)) {
                         candidates.add(c);
                     }
                 }
@@ -277,7 +295,7 @@ final class SoundControlScreen extends Screen implements DraftScreen {
                     Base base = catalog.get(id);
                     if (base != null) {
                         var c = candidate(base);
-                        if (SoundSearch.matches(c, query, categoryFilter, namespaceFilter)) {
+                        if (SoundSearch.matches(c, searchQuery, categoryFilter, namespaceFilter)) {
                             candidates.add(c);
                         }
                     }
@@ -288,7 +306,7 @@ final class SoundControlScreen extends Screen implements DraftScreen {
                 if (SoundSearch.listsAll(query, categoryFilter, namespaceFilter)) {
                     for (Base base : catalog.values()) {
                         var c = candidate(base);
-                        if (SoundSearch.matches(c, query, categoryFilter, namespaceFilter)) {
+                        if (SoundSearch.matches(c, searchQuery, categoryFilter, namespaceFilter)) {
                             candidates.add(c);
                         }
                     }

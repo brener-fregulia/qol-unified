@@ -1,8 +1,9 @@
 # Unified Search Architecture (discovery)
 
 Status labels follow [AGENTS.md](../../AGENTS.md#decision-status-labels).
-Recommendations are **[Proposed]**; nothing is implemented. Findings are
-marked **Verified**, **Inferred**, **Proposed** or **Open**.
+Option C, its placement and both migrations are **[Approved 2026-11-28]**
+(Q-SA1 to Q-SA4) and implemented as Search Core V1 (§7). Findings are marked
+**Verified**, **Inferred**, **Proposed** or **Open**.
 
 This document asks whether Enhanced Statistics and Inventory Search justify a
 shared Search API. Its consumers are:
@@ -151,8 +152,8 @@ them fully.
 | Interoperability | Vanilla conventions | Shared with Controlling and others | Follows vanilla's and Keyboard Map's conventions |
 | Accessibility | Vanilla `EditBox` | Suggestions not narrated | Vanilla `EditBox` |
 
-**Recommendation [Proposed]: Option C**, keeping vanilla's conventions from
-Option A.
+**Decision [Approved 2026-11-28, Q-SA1]: Option C**, keeping vanilla's
+conventions from Option A.
 
 - **Why not B.** Searchables' main value, a general query language with
   autocomplete, is something V1 explicitly avoids. Its matching would still
@@ -162,7 +163,7 @@ Option A.
 - **Why C.** A shared algorithm is justified: four QoL consumers need the same
   fold-and-words rule, and two copies of it already exist.
 
-### 6.1 The contract (Proposed)
+### 6.1 The contract as first proposed (superseded by §7)
 
 Package `unified.qol.search`:
 
@@ -207,11 +208,68 @@ The Settings library keeps its own `normalize`:
   not a contract.
 - Unified: Optimizations has no search.
 
-**Placement [Proposed]:** in QoL (`unified.qol.search`). A move to a shared
-library is reconsidered only when a second module needs search (Q-SA4). Module
-builds stay independent.
+**Placement [Approved 2026-11-28, Q-SA4]:** in QoL (`unified.qol.search`).
+No new Gradle library. A move to a shared library is reconsidered only when
+another independently installed module needs search. Module builds stay
+independent.
 
-## 7. Shared UI widget: not proposed
+## 7. Implementation: Search Core V1
+
+Implemented 2026-11-28 in `mods/qol/src/main/kotlin/unified/qol/search/`
+(Kotlin, callable from Java; no Minecraft types, no dependencies, no threads).
+
+### 7.1 API
+
+| Type | Role |
+| --- | --- |
+| `SearchText.fold(text)` | The search form of any text: NFD, combining marks removed, whitespace runs collapsed to one space and trimmed, lowercase (`Locale.ROOT`). Compatibility forms (NFKD) are not folded, so `²` ≠ `2`. Pure; ASCII text skips the Unicode normalizer. |
+| `SearchableText.of(fields…)` | Immutable folded fields of one entry, in the consumer's order. `contains(term)` tests one field at a time, so a term never spans two fields; `field(i)` serves field-specific rules. Value equality. |
+| `SearchQuery.of(raw)` | Immutable folded query: `text()` and `terms()`. `matchesAll` = every term in some field (AND, any order); `matchesPhrase` = the whole text inside one field; `afterPrefix("key:")` for consumer-defined prefixes. `EMPTY` matches everything; consumers decide what an empty query shows. |
+
+- **Ownership.** Prepared data belongs to the consumer that builds it and is
+  kept next to the data it describes. There is no global or static cache.
+- **When to prepare.**
+  - Queries are folded once per text change.
+  - Entries are folded once per data change: a snapshot, the screen opening, a
+    changed label.
+  - Nothing is folded per frame.
+- **Out of scope:**
+  - ordering, filters and UI, which stay with each consumer;
+  - any query language, regular expressions, autocomplete, translation or
+    debouncing.
+
+### 7.2 Migrated consumers
+
+| Consumer | Change | Behavior |
+| --- | --- | --- |
+| Keyboard Map | `BindingFilter` is an immutable class that folds its query once. `BindingCatalog` prepares each binding's fields (name, category, input label) once per snapshot. `KeyboardMapScreen` keeps its filter until the query, category or visibility changes. | Phrase rule unchanged; `key:` unchanged. New: repeated or unusual whitespace counts as one space. Fixed: the per-key search highlight used to refold the query and every name on every frame. |
+| Sound Control | `SoundSearch.Candidate` carries its prepared `SearchableText`. `SoundControlScreen` caches candidates per sound id for the screen's lifetime (remade only when a sound's last-heard category changes) and localized category labels per category. | AND of words as before, now accent-insensitive (`musica` finds `Música`). Ordering (`BY_NAME`, recent order), filters, the 2-character and 200-row limits, live preview and rollback are untouched. |
+| Unified Settings workspace | **Not changed.** `WorkspaceNavigation.normalize` (NFD, marks removed, lowercase; whole query trimmed but inner whitespace kept) stays a copy of the same rule. `libs/settings` must not depend on QoL. | — |
+
+### 7.3 Validation
+
+- **Unit tests.** `SearchCoreTest` has 11 tests:
+  - case;
+  - accents;
+  - NFC/NFD;
+  - dotted İ, `ß`, `²` and supplementary characters;
+  - whitespace;
+  - AND;
+  - phrase;
+  - field boundaries;
+  - the empty query;
+  - prefixes;
+  - localized labels;
+  - deterministic order.
+- **Consumer tests.** These have regression cases:
+  - `BindingCatalogTest`: the phrase rule, order, `KEY:` and whitespace;
+  - `SoundSearchTest`: `musica` → `Música`, prepared text and candidate
+    equality.
+- **Game tests.** `runGameTestKeyboardmap` and `runGameTestSoundcontrol` pass,
+  including the `key:q` search, Escape-clears and the Sound Control screen
+  flows.
+
+## 8. Shared UI widget: not proposed
 
 Every consumer already uses vanilla's `EditBox`; their layouts differ:
 
@@ -226,13 +284,13 @@ small conventions are proposed instead:
 - the hint "Search..." (vanilla's `gui.recipebook.search_hint`);
 - Escape clears or unfocuses before it closes.
 
-## 8. Open questions for the PO
+## 9. Decisions
 
-- **Q-SA1 [Open]:** Approve Option C: an internal `unified.qol.search`, with
-  no Searchables dependency?
-- **Q-SA2 [Open]:** Migrate Sound Control to accent-insensitive search? It
-  changes results: more pt_br matches.
-- **Q-SA3 [Open]:** Migrate Keyboard Map to the shared primitives? This is
-  limited to folding and the prefix, with its substring rule unchanged.
-- **Q-SA4 [Open]:** Revisit a cross-module search library only when a second
-  module needs search?
+- **Q-SA1 [Approved 2026-11-28]:** Option C: an internal `unified.qol.search`,
+  with no Searchables dependency.
+- **Q-SA2 [Approved 2026-11-28]:** Sound Control migrated; accent-insensitive.
+- **Q-SA3 [Approved 2026-11-28]:** Keyboard Map migrated. Its phrase rule and
+  `key:` prefix are kept.
+- **Q-SA4 [Approved 2026-11-28]:** No new Gradle library. A cross-module
+  library is considered only when another independently installed module
+  needs search.

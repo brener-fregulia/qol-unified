@@ -66,6 +66,7 @@ public final class KeyboardMapScreen extends Screen {
     private BindingCatalog catalog;
     private String layoutId;
     private String query = "";
+    private BindingFilter filter;
     private String category;
     private Visibility visibility;
     private boolean moreKeys;
@@ -327,8 +328,12 @@ public final class KeyboardMapScreen extends Screen {
         listScroll = Math.clamp(listScroll, 0, maxListScroll());
     }
 
+    /** The current filter; remade only when the query, category or visibility changed, so drawing never refolds. */
     private BindingFilter filter() {
-        return new BindingFilter(query, category, visibility);
+        if (filter == null || !filter.sameAs(query, category, visibility)) {
+            filter = new BindingFilter(query, category, visibility);
+        }
+        return filter;
     }
 
     // ---- Card ----
