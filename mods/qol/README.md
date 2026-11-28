@@ -10,10 +10,10 @@ inventory tools, controls, chat, audio and navigation) into a single
 client-side mod. Each feature can be enabled or disabled individually from a
 central settings screen.
 
-> **Status:** early development (milestone M1). Eight features are
+> **Status:** early development (milestone M1). Nine features are
 > implemented: Food HUD, Chat Heads, Keyboard Map, Target Info, Sound
-> Control, Shulker Preview, Zoom and Inventory Mouse Tweaks. Nothing has
-> been released.
+> Control, Shulker Preview, Zoom, Inventory Mouse Tweaks and Inventory
+> Search. Nothing has been released.
 
 ## Initial target
 
@@ -65,7 +65,9 @@ with sample features:
 - `runFixtureClient` starts a manual QA client in `mods/qol/run-fixtures/`.
 - `runGameTestMain`, then `runGameTestRestart`, `runGameTestNewer` and
   `runGameTestCorrupt`, run automated client tests in `mods/qol/build/run-gametest*`.
-  `runGameTestFoodhud` covers Food HUD in a disposable world. With
+  `runGameTestFoodhud` covers Food HUD in a disposable world;
+  `runGameTestInventorysearch` covers Inventory Search (screens, keys,
+  Mouse Tweaks gestures, layouts and timings). With
   `-PappleSkinJar=<path to a downloaded AppleSkin JAR>`, `runGameTestAppleskin`
   captures the same situations with AppleSkin for comparison. Screenshots are
   saved there.
@@ -105,6 +107,8 @@ workflow.
   - [Configuration](../../docs/qol/architecture/configuration.md)
 - Specifications
   - [M0 — Platform Foundations](../../docs/qol/specifications/m0-platform-foundations.md)
+  - [Inventory Search V1](../../docs/qol/specifications/inventory-search-v1.md)
+  - [all specifications](../../docs/qol/specifications/)
 - Development
   - [Versioning and release policy](../../docs/development/versioning.md)
   - [Linux development setup](../../docs/development/linux-setup.md)

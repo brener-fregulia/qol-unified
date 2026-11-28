@@ -11,6 +11,15 @@ released yet.
 
 ### Added
 
+- **Inventory Search** (`inventory_search`, Inventory, on by default): a
+  small search field on the player inventory, chests (including double
+  chests), barrels, Ender Chests, Shulker Boxes and hoppers. Matching items
+  get a gold frame and the others are dimmed, with a match count; nothing is
+  moved and nothing is sent to the server. It matches item names, ids such
+  as `minecraft:diamond_sword` and enchantment names, ignoring case and
+  accents. Ctrl+F focuses it (left to JEI, REI or EMI when installed); while
+  it has focus, inventory keys type text. The query resets when the screen
+  closes.
 - Target Info shows a placed Shulker Box's contents icon (first occupied slot,
   or the predominant item per Shulker Preview's setting) once you have opened
   that box in the current session, labelled "Contents as last seen".

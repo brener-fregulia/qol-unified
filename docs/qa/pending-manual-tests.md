@@ -45,7 +45,7 @@ Case template:
 | Optimizations | Fast IP Ping (`fast_ip_ping`) | Medium | 7 | [fast-ip-ping-v1](../optimizations/specifications/fast-ip-ping-v1.md) §15 |
 | QoL | Target Info, placed Shulker Box | Medium | 4 | [target-info-v1](../qol/specifications/target-info-v1.md) §17 |
 | QoL | Enhanced Statistics (`enhanced_statistics`, not implemented) | Medium | 6 | [enhanced-statistics-v1](../qol/specifications/enhanced-statistics-v1.md) §11 |
-| QoL | Inventory Search (`inventory_search`, not implemented) | Medium | 8 | [inventory-search-v1](../qol/specifications/inventory-search-v1.md) §11 |
+| QoL | Inventory Search (`inventory_search`, implemented 2026-11-28) | Medium | 8 | [inventory-search-v1](../qol/specifications/inventory-search-v1.md) §11 |
 
 Common preconditions, unless a case says otherwise: production JARs from
 `./gradlew build`, a dedicated Prism test instance with Fabric API and Fabric
@@ -271,21 +271,27 @@ disposable world, or the PO's Paper test server.
 
 ### Inventory Search (`inventory_search`) — Medium priority
 
-Specified, **not implemented**: these cases run once the feature exists.
-Disposable worlds only.
+**Implemented 2026-11-28** ([spec §15](../qol/specifications/inventory-search-v1.md#15-v1-implementation-implemented-2026-11-28)).
+The automated game test covers these paths; it does not replace them. Use
+production JARs with Fabric API and Fabric Language Kotlin, in disposable
+worlds only.
 
 - [ ] **IS-01 — Basic search** · Medium · Status: Pending
-  - Steps: in a double chest with mixed items, type a name, an id
-    (`minecraft:diamond`), an enchantment ("mending") and then clear the field.
-  - Expected: matches framed, others dimmed, the count right; clearing restores
-    the normal look.
+  - Steps: in a double chest with mixed items, press Ctrl+F and type a name,
+    an id (`minecraft:diamond`), an enchantment (`mending`, also on an
+    enchanted book) and two words (`diamond sword`); then clear the field.
+  - Expected: matches get a gold frame, other items are dimmed but still
+    recognizable, empty slots are unchanged; the count inside the field is
+    right (red at 0); clearing restores the vanilla look.
   - Observations / evidence:
 
 - [ ] **IS-02 — Keys while typing** · High · Status: Pending
   - Steps: with the field focused, type `e`, `1`–`9`, `f`, `q` while hovering
-    an item; press Escape, then Escape again.
-  - Expected: the keys only type; nothing moves, drops or closes; the first
-    Escape unfocuses, the second closes.
+    an item; press Backspace; press Escape, then Escape again. Reopen the
+    container.
+  - Expected: the keys only type; nothing moves, drops or closes; Backspace
+    edits; the first Escape unfocuses, the second closes; the field is empty
+    after reopening.
   - Observations / evidence:
 
 - [ ] **IS-03 — Clicks unchanged** · High · Status: Pending
@@ -298,8 +304,11 @@ Disposable worlds only.
 - [ ] **IS-04 — Screens and placement** · Medium · Status: Pending
   - Steps: open the player inventory (recipe book closed and open), a chest, a
     double chest, a barrel, an Ender Chest, a Shulker Box and a hopper, at
-    1920×1080 and 1280×720.
-  - Expected: the field never covers the title, a slot or the recipe book.
+    1920×1080 and 1280×720 and at every GUI scale offered; also a double chest
+    renamed with a long name.
+  - Expected: the field never covers the title, a slot or the recipe book; with
+    a long name at a small size a search icon appears instead, and Ctrl+F or a
+    click opens it.
   - Observations / evidence:
 
 - [ ] **IS-05 — Inventory Mouse Tweaks** · High · Status: Pending
@@ -319,14 +328,15 @@ Disposable worlds only.
 - [ ] **IS-07 — Recipe viewers** · Low · Status: Pending
   - Preconditions: JEI or REI for 26.3 installed (if available; otherwise
     Blocked).
-  - Steps: open the inventory and a chest.
-  - Expected: no overlap with their panels or search field; both searches
-    usable.
+  - Steps: open the inventory and a chest; press Ctrl+F; click the Inventory
+    Search field and type.
+  - Expected: no overlap with their panels or search field; Ctrl+F goes to
+    the recipe viewer, not Inventory Search; both searches usable.
   - Observations / evidence:
 
 - [ ] **IS-08 — Portuguese and narrator** · Low · Status: Pending
-  - Steps: pt_br; search "picareta" and "eficiencia"; enable the narrator and
-    focus the field.
+  - Steps: pt_br; search "picareta", "eficiencia" and "afiacao"; enable the
+    narrator and focus the field.
   - Expected: accent-insensitive matches; the hint, value and count are
     narrated.
   - Observations / evidence:
@@ -344,7 +354,7 @@ resolve them.
 | Q-FIP8 | [Open] | Confirm Fast IP Ping on by default for non-public IPs. | FIP-01 to FIP-07 |
 | Q-FIP3 | [Open] | Public IPs stay on the vanilla path: optimizing them would skip the blocklist check of their PTR name. | FIP-06 |
 | Q-ES9 | [Open] | Enhanced Statistics on by default? | ES-01 to ES-06 |
-| Q-IS9 | [Open] | Inventory Search on by default? | IS-01 to IS-08 |
+| Q-IS9 | [Approved 2026-11-28] | Inventory Search on by default: yes; QA confirms it | IS-01 to IS-08 |
 
 ## Completed
 

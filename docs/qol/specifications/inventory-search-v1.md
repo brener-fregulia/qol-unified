@@ -1,10 +1,11 @@
-# Inventory Search V1 (discovery and specification)
+# Inventory Search V1
 
 Status labels follow [AGENTS.md](../../../AGENTS.md#decision-status-labels).
-Everything here is **[Proposed]** unless marked otherwise; nothing is
-implemented. Findings are marked **Verified** (Minecraft 26.3 decompiled
-source, the repository's code, or measured), **Inferred**, **Proposed** or
-**Open**.
+**Implemented 2026-11-28** under the PO's approved scope. §15 records what
+was built, how it differs from the proposal in §4–§9, and how it was tested;
+§1–§14 are the original discovery. Manual QA is pending (IS-01 to IS-08). Findings are marked
+**Verified** (Minecraft 26.3 decompiled source, the repository's code, or
+measured), **Inferred**, **Proposed** or **Open**.
 
 Search primitives: [Unified search architecture](../../discovery/unified-search-architecture.md).
 
@@ -339,23 +340,23 @@ per frame. Its cost must be measured before it is approved.
 
 ## 13. Open questions for the PO
 
-- **Q-IS1 [Open]:** Search full tooltip text in V1? Proposed: no; name, id and
+- **Q-IS1 [Approved 2026-11-28: no tooltip text in V1]:** Search full tooltip text in V1? Proposed: no; name, id and
   enchantments first.
 - **Q-IS2 [Open]:** Which further screens: dispenser and dropper, crafter,
   horse and llama, nautilus?
 - **Q-IS3 [Open]:** Modded container screens: only exact vanilla layouts
   (proposed), or an opt-in "all container screens" mode?
-- **Q-IS4 [Open]:** Should a Shulker Box or bundle stack match when its
+- **Q-IS4 [Approved 2026-11-28: no contents in V1]:** Should a Shulker Box or bundle stack match when its
   contents match (from its own current component, never the Target Info
   cache)?
-- **Q-IS5 [Open]:** Remember the last query per screen type for the session?
+- **Q-IS5 [Approved 2026-11-28: the query resets when the screen closes]:** Remember the last query per screen type for the session?
 - **Q-IS6 [Open]:** Prefix filters `#tag` and `@mod`, as in creative, JEI and
   REI?
-- **Q-IS7 [Open]:** Ctrl+F to focus, and whether it should be rebindable?
-- **Q-IS8 [Open]:** Dimming strength and frame color, and whether they need an
+- **Q-IS7 [Approved 2026-11-28: Ctrl+F; rebinding stays open]:** Ctrl+F to focus, and whether it should be rebindable?
+- **Q-IS8 [Approved 2026-11-28: no visual settings in V1]:** Dimming strength and frame color, and whether they need an
   accessibility setting.
-- **Q-IS9 [Open]:** Default on?
-- **Q-IS10 [Open]:** Should the field be hidden when REI or JEI provides its
+- **Q-IS9 [Approved 2026-11-28: on]:** Default on?
+- **Q-IS10 [Open]:** (V1 leaves Ctrl+F to JEI, REI and EMI and keeps the field) Should the field be hidden when REI or JEI provides its
   own inventory highlighting?
 
 ## 14. Recommended MVP
@@ -367,3 +368,155 @@ per frame. Its cost must be measured before it is approved.
 - **Display:** a frame on matches, dimming on the rest, and a match count.
 - **Excluded:** no settings beyond the switch, no packets, no clicks, no
   persistence, and no tooltip or contents search.
+
+## 15. V1 implementation [Implemented 2026-11-28]
+
+### 15.1 Approved scope (PO, 2026-11-28)
+
+| Item | Decision |
+| --- | --- |
+| Identity | `inventory_search`, "Inventory Search" / "Busca no Inventário", category Inventory, **on by default** (Q-IS9), client-only, LIVE, one switch and no other settings |
+| Screens | Player inventory, every 9×N chest menu (single and double chests, barrels, Ender Chests, chest minecarts and boats), Shulker Boxes, hoppers. Not: creative (own search), dispensers, crafters, workstations, mounts (Q-IS2 stays open). Modded subclasses of those classes with a 176 px wide container: best effort (Q-IS3) |
+| Matches | Display name (custom name when renamed), the item's own localized name, id with namespace, enchantment and stored-enchantment names (only when the item's tooltip shows them). No tooltip text (Q-IS1), no contents of container items (Q-IS4), never Target Info's Shulker snapshots |
+| Rules | The shared search core: case- and accent-insensitive, every word must match (AND), deterministic |
+| Keys | Ctrl+F focuses (Q-IS7). It is left to JEI (`jei`), REI (`roughlyenoughitems`) or EMI (`emi`) when one is installed, since they bind Ctrl+F (Q-IS10); the field is still reachable with the mouse |
+
+### 15.2 Behavior as built
+
+- **Look.** With a query, matching occupied slots get a 1 px gold frame
+  (`#FFD24A`) inside the 16×16 item area. Non-matching occupied slots get a
+  55 % dark overlay (`#8C101010`). Empty slots, slot borders and slot
+  positions are untouched. The item icons and counts stay recognizable.
+  Tooltips, the carried item and the hover highlight draw on top.
+- **Empty query.** Nothing is drawn, so the screen looks exactly like
+  vanilla.
+- **Match count.** Shown inside the field's right end, red when 0. The
+  field's narration reads "Search items: N found".
+- **Placement** (`SearchFieldLayout`, unit-tested):
+  - **Chests, Shulker Boxes, hoppers:** in the title row, right-aligned
+    (y 4–16, above the slot borders at y 17). Width: up to 88 px, and only
+    the space after the title plus a 4 px gap. Never over the title or a
+    slot.
+  - **Fallback 1:** if fewer than 50 px remain (a long custom name), the
+    field goes above the container when there are 14 px.
+  - **Fallback 2:** otherwise a 12 px search icon sits at the row's right
+    end. Ctrl+F or a click opens it into a field in the title row, which then
+    covers the end of the title. That only happens while the player is
+    searching, and the field closes again when focus leaves an empty field.
+  - **Player inventory:** above the container, right-aligned. Its title row
+    holds the player model. The field follows the container when the recipe
+    book opens, so it never covers the book. With less than 14 px above
+    (windows under about 194 px tall), it uses the icon.
+  - **GUI scale has little effect.** Minecraft caps the GUI scale so the
+    scaled screen is at least 320×240 (`Window.calculateScale`). The
+    inventory therefore always has 37 px above it, and a double chest 9 px.
+- **Draw order.** Vanilla draws container labels after its widgets, so the
+  field and icon skip the screen's widget pass and are drawn at the end of
+  `extractContents` instead (Mixin IS-2). This is after the labels and slots,
+  but before the carried item and tooltip. It was found from game-test
+  screenshots, where the expanded field had been written over by the title.
+- **Focus and keys.** These run through Fabric's per-screen events only, so
+  nothing global is hooked.
+  - **While the field has focus:** every key press is consumed. `E`, `Q`,
+    `F`, `1`–`9` and every other hotkey type text. Editing keys reach the
+    field.
+  - **Escape** or **Enter** unfocuses. A second Escape closes the screen as
+    usual.
+  - **A click anywhere outside the field** unfocuses it. The click itself
+    stays a normal vanilla click.
+  - **Without focus,** vanilla's keys are untouched. The only exception is
+    Ctrl+F, which is consumed so vanilla's offhand swap (which ignores Ctrl)
+    does not fire.
+- **Lifetime.**
+  - The state lives in the screen object (`InventorySearchHolder`, added by
+    a Mixin), so there is no global map.
+  - It survives a resize, and the query resets when the screen closes.
+  - Turning the feature off hides the field and stops indexing and drawing
+    on the next tick. Turning it on works without a restart.
+
+### 15.3 Indexing (`SlotSearchIndex`, Kotlin, Minecraft-free)
+
+- **Refresh.** Once per client tick, plus once when the screen opens and when
+  the query changes.
+- **What triggers re-preparing a slot.** A slot's prepared `SearchableText`
+  is rebuilt only when its stack is no longer
+  `ItemStack.isSameItemSameComponents` with the stored one-item copy. A
+  count change costs nothing.
+- **Language change.** It prepares every slot again.
+- **Other invalidation.**
+  - A new screen starts a new index.
+  - A different number of slots grows or shrinks the index.
+- **Matches.** They are a cached immutable `SlotMatches` (bit sets plus a
+  count), recomputed only when the query or the index version changes.
+  Drawing reads it without allocating.
+
+### 15.4 Measured in game (Ryzen 5 5625U, Java 25, dev client)
+
+These are from `runGameTestInventorysearch`, on a double chest plus the
+player inventory (90 slots, all occupied, varied items):
+
+| Operation | Time |
+| --- | --- |
+| Cold index of 90 slots (names, ids, enchantments) | median 0.25 ms (best 0.21 ms) |
+| Per-tick refresh with nothing changed | 6–8 µs |
+| A new query (fold + match all slots) | 12–18 µs |
+
+There is no per-frame text work, no thread, no packet and no file.
+
+### 15.5 Tests
+
+- **Unit tests** (all pass):
+  - `SlotSearchIndexTest` (7): preparation, names, ids and enchantments,
+    the empty query, component vs count changes, slot updates and resizing,
+    language invalidation, stored snapshots;
+  - `SearchFieldLayoutTest` (5): every vanilla container height and the
+    auto-scale heights, clear of slots and titles, long titles, the icon;
+  - `InventorySearchSettingsTest` (2).
+  - `DescriptorTranslationsTest` now expects 9 features in en_us and pt_br.
+- **Game test** (`runGameTestInventorysearch`, passes). It covers:
+  - **Player inventory:** Ctrl+F; name, id, enchantment and stored-enchantment
+    matches; AND.
+  - **Keys while focused:** `E`, `Q`, `F`, `1` and `5` type text and act on
+    nothing, and the client and server menus agree. Backspace edits.
+  - **Clicks:** a slot click unfocuses and is a normal pickup.
+  - **Unfocused:** `1` swaps as vanilla. Escape unfocuses, then closes. The
+    query resets on reopen, and unfocused `E` closes.
+  - **Recipe book:** the field follows the container.
+  - **Containers:** a single chest (a mouse click focuses), a double chest,
+    a barrel, an Ender Chest, a Shulker Box and a hopper.
+  - **With an active query:**
+    - Mouse Tweaks right-drag, left-drag collect, Shift + drag and the wheel;
+    - vanilla Shift + double-click;
+    - each followed by a client/server comparison and an item-total check.
+  - **Switching off:** while open it hides the field, and Ctrl+F then reaches
+    vanilla's offhand swap. A new screen shows no field and `E` closes.
+    Switching back on works without a restart.
+  - **Narrow layouts:** a renamed double chest at the minimum 427×240 gets
+    the icon, which opens into the field. The inventory in a 400×180 window
+    gets the icon.
+  - **1920×1080 at scale 3.**
+  - **pt_br:** `espada diamante`, `afiacao` and `remendo`.
+  - **Timings:** §15.4.
+- **Mouse Tweaks regression.** `runGameTestMousetweaks` passes with Inventory
+  Search on, and its unit tests pass.
+- **Screenshots.** They were inspected in
+  `mods/qol/build/run-gametest-inventorysearch/screenshots/`.
+
+### 15.6 Known limitations
+
+- **Screens.** The supported screens only. Dispensers, crafters, furnaces,
+  workstations and mount inventories have no field (Q-IS2). The creative
+  inventory keeps its own search.
+- **Modded screens.** A modded screen that subclasses a supported class but
+  draws its own layout in the title row could overlap (Q-IS3). Other modded
+  containers get nothing.
+- **What is searched.** No lore, potion effects or other tooltip lines
+  (Q-IS1). No contents of Shulker Box or bundle items (Q-IS4).
+- **Hidden enchantments.** Enchantments that an item hides from its tooltip
+  are not searched.
+- **Recipe viewers.** With JEI, REI or EMI installed, Ctrl+F belongs to them.
+  Their layouts were not tested (IS-07).
+- **Icon mode.** When the search icon is opened, the field covers the end of
+  a long title while searching.
+- **Visual settings.** There are none in V1, such as colors or dimming
+  strength (Q-IS8).
