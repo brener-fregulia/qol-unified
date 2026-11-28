@@ -49,6 +49,7 @@ commit message or the document.
 | --- | --- |
 | `docs/architecture/monorepo.md` | Modules, independence rules, commands, CI |
 | `docs/architecture/unified-settings-integration.md` | Shared settings across Unified mods (discovery, [Proposed]) |
+| `docs/architecture/vanilla-world-compatibility.md` | Vanilla world compatibility contract (principle [Approved], rules and tests [Proposed]) |
 | `docs/development/versioning.md` | Per-module versioning, tags and changelog policy |
 | `docs/development/linux-setup.md` | Linux / WSL development setup |
 | `docs/qol/product/vision.md` | Unified: QoL goals, principles, milestones |
@@ -66,6 +67,11 @@ commit message or the document.
   server-side mod. Respect vanilla synchronization and server authority.
 - **Player data safety first.** Never risk inventory, world or navigation data.
   Prefer doing nothing over doing something unsafe.
+- **Vanilla world compatibility [Approved 2026-11-28].** Removing any Unified
+  mod must leave every world loadable and intact in vanilla. No
+  Unified-specific persistent world data, registry entries or save-format
+  changes without explicit PO approval; native code never runs in save paths
+  ([contract](docs/architecture/vanilla-world-compatibility.md)).
 - **Keep it simple.** No dependency injection framework, event bus,
   reflection-based discovery or plugin loader without demonstrated need and
   approval. No speculative abstractions.

@@ -83,6 +83,8 @@ Unified/
   Download mods → Fabric Language Kotlin**). It is never bundled into a
   Unified JAR. Versions are pinned in the root `gradle.properties`
   (`kotlin_version`, `fabric_kotlin_version`) and move together.
+- **Vanilla worlds [Approved 2026-11-28].** No mod may make a world depend
+  on it; see the [vanilla world compatibility contract](vanilla-world-compatibility.md).
 - **Configuration directories.** `config/qol_unified/` and
   `config/unified_optimizations/`. A mod never reads another mod's files.
 
