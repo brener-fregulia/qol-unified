@@ -44,6 +44,8 @@ Case template:
 | Optimizations | FastQuit (`fast_quit`) | High | 11 | [fastquit-v1](../optimizations/specifications/fastquit-v1.md) §12 |
 | Optimizations | Fast IP Ping (`fast_ip_ping`) | Medium | 7 | [fast-ip-ping-v1](../optimizations/specifications/fast-ip-ping-v1.md) §15 |
 | QoL | Target Info, placed Shulker Box | Medium | 4 | [target-info-v1](../qol/specifications/target-info-v1.md) §17 |
+| QoL | Enhanced Statistics (`enhanced_statistics`, not implemented) | Medium | 6 | [enhanced-statistics-v1](../qol/specifications/enhanced-statistics-v1.md) §11 |
+| QoL | Inventory Search (`inventory_search`, not implemented) | Medium | 8 | [inventory-search-v1](../qol/specifications/inventory-search-v1.md) §11 |
 
 Common preconditions, unless a case says otherwise: production JARs from
 `./gradlew build`, a dedicated Prism test instance with Fabric API and Fabric
@@ -222,6 +224,113 @@ representative item icon is shown; the enhancement appears to work. This is
     the contents are current.
   - Observations / evidence:
 
+### Enhanced Statistics (`enhanced_statistics`) — Medium priority
+
+Specified, **not implemented**: these cases run once the feature exists. A
+disposable world, or the PO's Paper test server.
+
+- [ ] **ES-01 — Vanilla parity and switch** · Medium · Status: Pending
+  - Steps: open Statistics with the feature off, then on.
+  - Expected: off, vanilla's screen; on, the same tabs, title and Done button
+    plus search and filters; the values match between the two.
+  - Observations / evidence:
+
+- [ ] **ES-02 — Paper server** · Medium · Status: Pending
+  - Preconditions: the Paper test server; some play on it.
+  - Steps: open Statistics; search, sort and filter; reopen.
+  - Expected: values equal those on vanilla's screen; no error or kick; a
+    single "Retrieving statistics..." per opening.
+  - Observations / evidence:
+
+- [ ] **ES-03 — Long-lived player** · Medium · Status: Pending
+  - Preconditions: a player with many hours and hundreds of item rows.
+  - Steps: open each tab; sort Items by every column; search; check the
+    totals.
+  - Expected: no visible delay; totals plausible against the rows; deterministic
+    order.
+  - Observations / evidence:
+
+- [ ] **ES-04 — Portuguese** · Medium · Status: Pending
+  - Steps: game language pt_br; search with and without accents (for example
+    "distancia", "Distância").
+  - Expected: both find the same rows; every new label is translated.
+  - Observations / evidence:
+
+- [ ] **ES-05 — Keyboard, narrator, small window** · Medium · Status: Pending
+  - Steps: navigate only with the keyboard; enable the narrator; repeat at
+    GUI scale 4 in a 1280×720 window.
+  - Expected: every control is reachable and narrated; nothing overlaps.
+  - Observations / evidence:
+
+- [ ] **ES-06 — Modded statistics** · Low · Status: Pending
+  - Preconditions: a mod that registers custom statistics (if one is available;
+    otherwise Blocked).
+  - Steps: open General; search for the mod's statistic.
+  - Expected: shown in the Other group with the mod's formatting.
+  - Observations / evidence:
+
+### Inventory Search (`inventory_search`) — Medium priority
+
+Specified, **not implemented**: these cases run once the feature exists.
+Disposable worlds only.
+
+- [ ] **IS-01 — Basic search** · Medium · Status: Pending
+  - Steps: in a double chest with mixed items, type a name, an id
+    (`minecraft:diamond`), an enchantment ("mending") and then clear the field.
+  - Expected: matches framed, others dimmed, the count right; clearing restores
+    the normal look.
+  - Observations / evidence:
+
+- [ ] **IS-02 — Keys while typing** · High · Status: Pending
+  - Steps: with the field focused, type `e`, `1`–`9`, `f`, `q` while hovering
+    an item; press Escape, then Escape again.
+  - Expected: the keys only type; nothing moves, drops or closes; the first
+    Escape unfocuses, the second closes.
+  - Observations / evidence:
+
+- [ ] **IS-03 — Clicks unchanged** · High · Status: Pending
+  - Steps: with an active query: click, Shift-click, Shift-double-click,
+    drag-spread, and click the field while carrying an item.
+  - Expected: every action behaves as without the feature; nothing is dropped
+    by clicking the field.
+  - Observations / evidence:
+
+- [ ] **IS-04 — Screens and placement** · Medium · Status: Pending
+  - Steps: open the player inventory (recipe book closed and open), a chest, a
+    double chest, a barrel, an Ender Chest, a Shulker Box and a hopper, at
+    1920×1080 and 1280×720.
+  - Expected: the field never covers the title, a slot or the recipe book.
+  - Observations / evidence:
+
+- [ ] **IS-05 — Inventory Mouse Tweaks** · High · Status: Pending
+  - Steps: with an active query, use every Mouse Tweaks gesture.
+  - Expected: gestures work exactly as without a query.
+  - Observations / evidence:
+
+- [ ] **IS-06 — Live contents and Paper** · Medium · Status: Pending
+  - Preconditions: the Paper test server; a hopper feeding a chest, or a
+    second player.
+  - Steps: keep a query active while the contents change; also open a plugin
+    menu, if one is available.
+  - Expected: the highlight follows the change within a moment; no kick or
+    error; plugin menus are only highlighted.
+  - Observations / evidence:
+
+- [ ] **IS-07 — Recipe viewers** · Low · Status: Pending
+  - Preconditions: JEI or REI for 26.3 installed (if available; otherwise
+    Blocked).
+  - Steps: open the inventory and a chest.
+  - Expected: no overlap with their panels or search field; both searches
+    usable.
+  - Observations / evidence:
+
+- [ ] **IS-08 — Portuguese and narrator** · Low · Status: Pending
+  - Steps: pt_br; search "picareta" and "eficiencia"; enable the narrator and
+    focus the field.
+  - Expected: accent-insensitive matches; the hint, value and count are
+    narrated.
+  - Observations / evidence:
+
 ## Decisions pending QA
 
 These stay open until the PO decides; QA results inform them but do not
@@ -234,6 +343,8 @@ resolve them.
 | Q-FQ3 | [Proposed] | Keep FastQuit's settings to the on/off switch? | — |
 | Q-FIP8 | [Open] | Confirm Fast IP Ping on by default for non-public IPs. | FIP-01 to FIP-07 |
 | Q-FIP3 | [Open] | Public IPs stay on the vanilla path: optimizing them would skip the blocklist check of their PTR name. | FIP-06 |
+| Q-ES9 | [Open] | Enhanced Statistics on by default? | ES-01 to ES-06 |
+| Q-IS9 | [Open] | Inventory Search on by default? | IS-01 to IS-08 |
 
 ## Completed
 
