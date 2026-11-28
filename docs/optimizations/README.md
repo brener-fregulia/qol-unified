@@ -51,5 +51,8 @@ unchanged.
 ## Documents
 
 - [Fast IP Ping V1](specifications/fast-ip-ping-v1.md)
+- [Rust, native code and AOT feasibility](../discovery/rust-native-aot-feasibility.md)
+  (discovery 2026-11-28: no migration proposed)
+- [Vanilla world compatibility](../architecture/vanilla-world-compatibility.md)
 - [Monorepo architecture](../architecture/monorepo.md)
 - [Versioning](../development/versioning.md)

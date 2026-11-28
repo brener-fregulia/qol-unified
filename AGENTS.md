@@ -50,6 +50,7 @@ commit message or the document.
 | `docs/architecture/monorepo.md` | Modules, independence rules, commands, CI |
 | `docs/architecture/unified-settings-integration.md` | Shared settings across Unified mods (discovery, [Proposed]) |
 | `docs/architecture/vanilla-world-compatibility.md` | Vanilla world compatibility contract (principle [Approved], rules and tests [Proposed]) |
+| `docs/discovery/` | Project-wide discoveries: [Rust/native/AOT feasibility](docs/discovery/rust-native-aot-feasibility.md) ([Proposed]) |
 | `docs/development/versioning.md` | Per-module versioning, tags and changelog policy |
 | `docs/development/linux-setup.md` | Linux / WSL development setup |
 | `docs/qol/product/vision.md` | Unified: QoL goals, principles, milestones |
@@ -87,6 +88,10 @@ commit message or the document.
   both `en_us` and `pt_br`.
 - **No license decisions.** Do not add or change a license file.
 - **Horizon.** Do not write speculative Horizon (Rust) code before M5.
+- **Native code.** No Rust, C or C++ in any production module and no native
+  library loaded at run time without an approved specification and benchmark
+  ([Rust feasibility](docs/discovery/rust-native-aot-feasibility.md), Q-RN1).
+  QoL and Unified Settings never require a native toolchain.
 - **Startup performance.** Keep startup cost minimal: no work in initializers
   beyond what is needed, no eager loading of feature classes or data, no
   Mixins unless the feature requires them. Do not add startup optimizations
