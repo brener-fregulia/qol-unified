@@ -55,7 +55,8 @@ loom {
                 "settings" to "build/run-gametest-settings",
                 "settingsrestart" to "build/run-gametest-settings",
                 "zoom" to "build/run-gametest-zoom",
-                "mousetweaks" to "build/run-gametest-mousetweaks")) {
+                "mousetweaks" to "build/run-gametest-mousetweaks",
+                "inventorysearch" to "build/run-gametest-inventorysearch")) {
             register("gameTest" + scenario.replaceFirstChar { it.uppercase() }) {
                 client()
                 name("Game Test ($scenario)")

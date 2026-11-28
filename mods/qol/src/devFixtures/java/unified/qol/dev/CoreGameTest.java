@@ -63,6 +63,7 @@ public final class CoreGameTest implements FabricClientGameTest {
             case "soundcontrolrestart" -> new SoundControlGameTest(ctx).restart();
             case "zoom" -> new ZoomGameTest(ctx).run();
             case "mousetweaks" -> new MouseTweaksGameTest(ctx).run();
+            case "inventorysearch" -> new InventorySearchGameTest(ctx).run();
             default -> throw new AssertionError("Unknown scenario " + scenario);
         }
         ctx.setScreen(TitleScreen::new);
