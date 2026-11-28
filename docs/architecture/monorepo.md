@@ -9,8 +9,8 @@ brief).
 | Public name | Mod id | Gradle module | State |
 | --- | --- | --- | --- |
 | Unified: QoL | `qol_unified` | `:mods:qol` | Eight features implemented |
-| Unified: Optimizations | `unified_optimizations` | `:mods:optimizations` | Foundation only |
-| Unified: Graphics | not chosen | not created | Future; created when its discovery begins |
+| Unified: Optimizations | `unified_optimizations` | `:mods:optimizations` | Fast IP Ping and FastQuit implemented |
+| Unified: Graphics | not chosen | not created | Future; discovery in [unified-graphics-rust-vulkan.md](../discovery/unified-graphics-rust-vulkan.md) |
 
 Unified: QoL keeps the mod id, packages, configuration file, keybindings and
 feature ids it had as "QoL: Unified", so existing configurations keep working.
@@ -30,6 +30,7 @@ Unified/
 ├── docs/
 │   ├── architecture/     project-wide architecture (this file)
 │   ├── development/      shared setup and versioning policy
+│   ├── discovery/        project-wide discoveries (Rust/AOT, Graphics)
 │   ├── qol/              Unified: QoL product, architecture, design, specs
 │   └── optimizations/    Unified: Optimizations catalog and specs
 ├── .github/workflows/    one workflow per module

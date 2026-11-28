@@ -50,7 +50,7 @@ commit message or the document.
 | `docs/architecture/monorepo.md` | Modules, independence rules, commands, CI |
 | `docs/architecture/unified-settings-integration.md` | Shared settings across Unified mods (discovery, [Proposed]) |
 | `docs/architecture/vanilla-world-compatibility.md` | Vanilla world compatibility contract (principle [Approved], rules and tests [Proposed]) |
-| `docs/discovery/` | Project-wide discoveries: [Rust/native/AOT feasibility](docs/discovery/rust-native-aot-feasibility.md) ([Proposed]) |
+| `docs/discovery/` | Project-wide discoveries: [Rust/native/AOT feasibility](docs/discovery/rust-native-aot-feasibility.md), [Unified: Graphics, Vulkan and Rust](docs/discovery/unified-graphics-rust-vulkan.md) ([Proposed]) |
 | `docs/development/versioning.md` | Per-module versioning, tags and changelog policy |
 | `docs/development/linux-setup.md` | Linux / WSL development setup |
 | `docs/qol/product/vision.md` | Unified: QoL goals, principles, milestones |

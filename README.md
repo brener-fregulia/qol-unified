@@ -7,8 +7,8 @@ requires another.
 | Mod | What it is for | State |
 | --- | --- | --- |
 | **Unified: QoL** | Quality-of-life features: Food HUD, Chat Heads, Keyboard Map, Target Info, Sound Control, Shulker Preview, Zoom, Inventory Mouse Tweaks | In development, `mods/qol` |
-| **Unified: Optimizations** | Client-side performance and network optimizations | Foundation only (no optimizations yet), `mods/optimizations` |
-| **Unified: Graphics** | Visual and rendering features | Planned; not created yet |
+| **Unified: Optimizations** | Client-side performance and network optimizations: Fast IP Ping, FastQuit | In development, `mods/optimizations` |
+| **Unified: Graphics** | Visual and rendering features | Planned; not created yet ([discovery](docs/discovery/unified-graphics-rust-vulkan.md)) |
 
 Each mod carries a copy of **Unified Settings (Library)** inside its JAR;
 the game loads only one. It adds one **Unified Settings** entry (the `U`
@@ -72,6 +72,10 @@ open a real window and use disposable folders under
   [changelog](mods/qol/CHANGELOG.md)
 - Unified: Optimizations: [overview and catalog](docs/optimizations/README.md),
   [changelog](mods/optimizations/CHANGELOG.md)
+- [Vanilla world compatibility](docs/architecture/vanilla-world-compatibility.md):
+  removing any Unified mod never breaks a world
+- Discoveries: [Rust, native code and AOT](docs/discovery/rust-native-aot-feasibility.md),
+  [Unified: Graphics, Vulkan and Rust](docs/discovery/unified-graphics-rust-vulkan.md)
 - Contributors and agents: [AGENTS.md](AGENTS.md)
 
 The project follows Spec-Driven Development: behavior is specified and
