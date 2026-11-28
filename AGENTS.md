@@ -53,6 +53,7 @@ commit message or the document.
 | `docs/discovery/` | Project-wide discoveries: [Rust/native/AOT feasibility](docs/discovery/rust-native-aot-feasibility.md), [Unified: Graphics, Vulkan and Rust](docs/discovery/unified-graphics-rust-vulkan.md) ([Proposed]) |
 | `docs/development/versioning.md` | Per-module versioning, tags and changelog policy |
 | `docs/development/linux-setup.md` | Linux / WSL development setup |
+| `docs/development/cachyos-environment-audit.md` | CachyOS environment audit (2026-11-28) |
 | `docs/qol/product/vision.md` | Unified: QoL goals, principles, milestones |
 | `docs/qol/product/feature-catalog.md` | Unified: QoL features and identifiers |
 | `docs/qol/architecture/` | Unified: QoL overview, configuration, diagnostics |

@@ -66,6 +66,7 @@ open a real window and use disposable folders under
 - [Versioning and releases](docs/development/versioning.md) (per mod,
   tags like `qol/v26.3.0`)
 - [Linux development setup](docs/development/linux-setup.md)
+  ([CachyOS audit](docs/development/cachyos-environment-audit.md))
 - Unified: QoL: [README](mods/qol/README.md),
   [feature catalog](docs/qol/product/feature-catalog.md),
   [specifications](docs/qol/specifications/),

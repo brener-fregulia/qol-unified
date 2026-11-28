@@ -98,7 +98,38 @@ The task list and optional comparison runs are described in the
 
 Use a dedicated test instance, not one holding worlds you care about.
 
-## 5. WSL2 notes
+## 5. Troubleshooting: certificate errors from Loom
+
+If configuration fails with `Failed to download
+https://piston-meta.mojang.com/... unable to find valid certification path`,
+check the network before the JDK:
+
+```sh
+curl -sS -o /dev/null https://piston-meta.mojang.com/mc/game/version_manifest_v2.json
+```
+
+An error naming a different certificate (for example a "Blocked Page")
+means a DNS or web filter on the network blocks Mojang's or Fabric's hosts;
+build on another network. `--offline` did not help on the audited machine:
+Loom still needed the version manifest although the Minecraft JARs were
+cached. Details: [CachyOS audit](cachyos-environment-audit.md) §5.
+
+## 6. Optional native tools (research only)
+
+No Unified module needs Rust or Vulkan SDK tools. For the Rust and Graphics
+discoveries ([Rust feasibility](../discovery/rust-native-aot-feasibility.md),
+[Graphics](../discovery/unified-graphics-rust-vulkan.md)) on Arch / CachyOS:
+
+```sh
+rustup default stable                       # via the rustup package or rustup.rs
+sudo pacman -S vulkan-tools vulkan-validation-layers shaderc spirv-tools
+vulkaninfo --summary                        # lists the Vulkan ICDs and devices
+```
+
+Never build distributable native libraries with `-C target-cpu=native` or on
+a recent-glibc host; see the feasibility document §9.
+
+## 7. WSL2 notes
 
 - WSLg provides the display (`DISPLAY` and `WAYLAND_DISPLAY` are set).
   Minecraft's SDL falls back to XWayland on it.
