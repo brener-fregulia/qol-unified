@@ -41,6 +41,7 @@ and currently has no QoL feature.
 | --- | --- | --- | --- | --- |
 | Food information | HUD & Information | `food_hud` | M1 [Approved: first feature after Core] | AppleSkin; spec: [Food HUD V1](../specifications/food-hud-v1.md) [Approved 2026-11-22]; implemented |
 | Block and entity inspector (Target Info) | HUD & Information | `target_info` [Approved 2026-11-23; was `inspector`] | M1.4 [Approved 2026-11-23] | Jade, WTHIT; spec: [Target Info V1](../specifications/target-info-v1.md) [Approved 2026-11-23]; implemented |
+| Enhanced statistics screen | HUD & Information | `enhanced_statistics` [Proposed] | [Open] | Search, sort, filters and totals over vanilla's own counters; spec: [Enhanced Statistics V1](../specifications/enhanced-statistics-v1.md) [Proposed]; not implemented |
 | Inventory sorting | Inventory | `inventory_sort` | M2 [Proposed] | Must use vanilla click actions only |
 | Item transfer | Inventory | `item_transfer` | M2 [Proposed] | Must use vanilla click actions only |
 | Protected slots | Inventory | `protected_slots` | M2 [Proposed] | Must not lose items on failure |
